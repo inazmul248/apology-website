@@ -3,84 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💔 I'm Sorry - Apology Website</title>
+    <title>💔 I'm Sorry - Cinematic Apology</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="background"></div>
-    
-    <div class="container">
-        <!-- Header -->
+    <!-- Background with particles -->
+    <div class="background">
+        <div class="particles"></div>
+        <div class="film-grain"></div>
+    </div>
+
+    <!-- Loading screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>Loading emotional journey...</p>
+        </div>
+    </div>
+
+    <!-- Main container -->
+    <div class="container" id="mainContainer">
+        <!-- Cinema bars (top and bottom) -->
+        <div class="cinema-bars cinema-top"></div>
+        <div class="cinema-bars cinema-bottom"></div>
+
+        <!-- Header with dramatic effect -->
         <div class="header">
-            <h1 class="title">I'm Deeply Sorry</h1>
-            <p class="subtitle">Please listen to what I have to say...</p>
+            <div class="header-glow"></div>
+            <h1 class="title">
+                <span class="title-word">I'm</span>
+                <span class="title-word">Deeply</span>
+                <span class="title-word">Sorry</span>
+            </h1>
+            <p class="subtitle">
+                <span class="subtitle-char">P</span><span class="subtitle-char">l</span><span class="subtitle-char">e</span><span class="subtitle-char">a</span><span class="subtitle-char">s</span><span class="subtitle-char">e</span>
+                <span class="subtitle-char" style="margin-left: 10px;">l</span><span class="subtitle-char">i</span><span class="subtitle-char">s</span><span class="subtitle-char">t</span><span class="subtitle-char">e</span><span class="subtitle-char">n</span>
+                <span class="subtitle-char" style="margin-left: 10px;">t</span><span class="subtitle-char">o</span>
+                <span class="subtitle-char" style="margin-left: 10px;">m</span><span class="subtitle-char">y</span>
+                <span class="subtitle-char" style="margin-left: 10px;">h</span><span class="subtitle-char">e</span><span class="subtitle-char">a</span><span class="subtitle-char">r</span><span class="subtitle-char">t</span>
+            </p>
         </div>
 
-        <!-- Main Content -->
+        <!-- Main content -->
         <div class="content">
-            <!-- Canvas for Character -->
-            <div class="character-container">
-                <canvas id="characterCanvas" width="400" height="500"></canvas>
+            <!-- Left side: Character -->
+            <div class="character-section">
+                <div class="character-container">
+                    <div class="character-glow"></div>
+                    <canvas id="characterCanvas" width="450" height="550"></canvas>
+                    <div class="character-shadow"></div>
+                </div>
             </div>
 
-            <!-- Speech Section -->
+            <!-- Right side: Speech -->
             <div class="speech-section">
-                <div class="speech-header">
-                    <h2 id="speechTitle">Part 1: The Responsibility</h2>
-                </div>
-                
-                <div class="speech-text">
-                    <p id="speechContent">Loading...</p>
+                <!-- Speech counter -->
+                <div class="speech-counter">
+                    <div class="counter-bg"></div>
+                    <span class="counter-text"><span id="currentPart">1</span> <span class="counter-slash">/</span> 3</span>
                 </div>
 
+                <!-- Speech title with line -->
+                <div class="speech-title-container">
+                    <div class="title-line left"></div>
+                    <h2 id="speechTitle" class="speech-title">Part 1: The Responsibility</h2>
+                    <div class="title-line right"></div>
+                </div>
+
+                <!-- Speech content with line animation -->
+                <div class="speech-text-wrapper">
+                    <div class="speech-text" id="speechContent">
+                        <!-- Text will be animated here -->
+                    </div>
+                </div>
+
+                <!-- Progress indicator -->
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+
+                <!-- Navigation buttons -->
                 <div class="speech-navigation">
-                    <button class="btn btn-nav" id="prevBtn" onclick="previousSpeech()">← Previous</button>
-                    <span class="speech-counter"><span id="currentPart">1</span> / 3</span>
-                    <button class="btn btn-nav" id="nextBtn" onclick="nextSpeech()">Next →</button>
+                    <button class="btn btn-nav btn-prev" id="prevBtn" onclick="previousSpeech()">
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </button>
+                    <button class="btn btn-nav btn-next" id="nextBtn" onclick="nextSpeech()">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- Interaction Section -->
+        <!-- Interaction section -->
         <div class="interaction-section">
-            <div class="damage-bar">
-                <div class="damage-fill" id="damageFill"></div>
-            </div>
-            <p class="damage-text">Anger Level: <span id="damagePercent">0</span>%</p>
+            <div class="interaction-inner">
+                <!-- Damage indicator -->
+                <div class="damage-section">
+                    <div class="damage-title">
+                        <i class="fas fa-heart"></i> Your Anger Level
+                    </div>
+                    <div class="damage-bar">
+                        <div class="damage-fill" id="damageFill">
+                            <div class="damage-shine"></div>
+                        </div>
+                        <div class="damage-text" id="damagePercent">0%</div>
+                    </div>
+                    <div class="damage-levels">
+                        <span class="level">Calm</span>
+                        <span class="level">Upset</span>
+                        <span class="level">Angry</span>
+                        <span class="level">Furious</span>
+                    </div>
+                </div>
 
-            <div class="button-group">
-                <button class="btn btn-slap" id="slapBtn" onclick="slapCharacter()">
-                    👋 SLAP HIM
-                </button>
-                <button class="btn btn-forgive" id="forgiveBtn" onclick="forgiveCharacter()" disabled>
-                    💗 FORGIVE ME
-                </button>
-            </div>
+                <!-- Action buttons -->
+                <div class="button-group">
+                    <button class="btn btn-slap" id="slapBtn" onclick="slapCharacter()">
+                        <i class="fas fa-hand-fist"></i>
+                        <span class="btn-text">SLAP HIM</span>
+                        <span class="btn-count" id="slapCount">0</span>
+                    </button>
+                    <button class="btn btn-forgive" id="forgiveBtn" onclick="forgiveCharacter()" disabled>
+                        <i class="fas fa-heart"></i>
+                        <span class="btn-text">FORGIVE ME</span>
+                    </button>
+                </div>
 
-            <p class="hint">💡 Slap as much as you want, then click Forgive when ready</p>
+                <!-- Hint text -->
+                <p class="hint-text">
+                    <i class="fas fa-lightbulb"></i>
+                    Express your feelings freely. When you're ready, forgive and heal.
+                </p>
+            </div>
         </div>
 
-        <!-- Victory Screen (Hidden) -->
+        <!-- Victory screen -->
         <div class="victory-screen" id="victoryScreen">
+            <div class="victory-stars"></div>
             <div class="victory-content">
-                <h2>💕 YOU FORGAVE ME 💕</h2>
-                <p>Thank you for giving me a chance...</p>
-                <p class="victory-message">I promise to be better for you ❤️</p>
-                <button class="btn btn-restart" onclick="location.reload()">Start Over</button>
+                <div class="victory-header">
+                    <div class="victory-line"></div>
+                    <h2 class="victory-title">
+                        <i class="fas fa-heart"></i>
+                        YOU FORGAVE ME
+                        <i class="fas fa-heart"></i>
+                    </h2>
+                    <div class="victory-line"></div>
+                </div>
+
+                <div class="victory-messages">
+                    <p class="victory-message-1">Thank you for giving me a second chance...</p>
+                    <p class="victory-message-2">I promise to be better for you</p>
+                    <p class="victory-message-3">I will spend my whole life making this right 💗</p>
+                </div>
+
+                <button class="btn btn-restart" onclick="location.reload()">
+                    <i class="fas fa-redo"></i> Start Over
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Audio Elements -->
-   <audio id="backgroundMusic" loop>
-    <source src="audio/background-music.mp3" type="audio/mpeg">
-</audio>
-<audio id="slapSound">
-    <source src="audio/slap-sound.mp3" type="audio/mpeg">
-</audio>
-<audio id="forgiveSound">
-    <source src="audio/forgive-sound.mp3" type="audio/mpeg">
-</audio>
+    <!-- Audio elements -->
+    <audio id="backgroundMusic" loop volume="0.4">
+        <source src="https://www.bensound.com/bensound-music/bensound-sad.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="slapSound" volume="0.6">
+        <source src="https://freesound.org/data/previews/536/536108_5121236-lq.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="forgiveSound" volume="0.8">
+        <source src="https://freesound.org/data/previews/682/682111_10547979-lq.mp3" type="audio/mpeg">
+    </audio>
 
     <script src="character.js"></script>
     <script src="main.js"></script>
