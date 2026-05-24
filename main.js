@@ -1,4 +1,4 @@
-// ==================== SPEECH DATA ====================
+// ==================== CINEMATIC SPEECH DATA ====================
 const speeches = [
     {
         title: "Part 1: The Responsibility",
@@ -18,6 +18,7 @@ const speeches = [
 let currentSpeechIndex = 0;
 let character = null;
 let canForgive = false;
+let slapCount = 0;
 
 // ==================== INITIALIZATION ====================
 document.addEventListener('DOMContentLoaded', () => {
@@ -31,8 +32,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Setup keyboard shortcuts
     setupKeyboardShortcuts();
     
-    // Setup audio (optional)
+    // Play background music
     tryPlayBackgroundMusic();
+    
+    // Create stars for victory screen
+    createVictoryStars();
 });
 
 // ==================== SPEECH MANAGEMENT ====================
@@ -42,9 +46,29 @@ function loadSpeech(index) {
     currentSpeechIndex = index;
     const speech = speeches[index];
     
-    document.getElementById('speechTitle').textContent = speech.title;
-    document.getElementById('speechContent').textContent = speech.text;
+    // Animate title change
+    const titleElement = document.getElementById('speechTitle');
+    titleElement.style.animation = 'none';
+    setTimeout(() => {
+        titleElement.textContent = speech.title;
+        titleElement.style.animation = 'titleSlideIn 0.6s ease 0s forwards';
+    }, 10);
+    
+    // Animate text change
+    const textElement = document.getElementById('speechContent');
+    textElement.style.animation = 'none';
+    textElement.innerHTML = '';
+    
+    setTimeout(() => {
+        textElement.innerHTML = `<p>${speech.text}</p>`;
+        textElement.style.animation = 'textReveal 1s ease 0s forwards';
+    }, 10);
+    
     document.getElementById('currentPart').textContent = index + 1;
+    
+    // Update progress bar
+    const progress = ((index + 1) / speeches.length) * 100;
+    document.getElementById('progressFill').style.width = progress + '%';
     
     // Update button states
     document.getElementById('prevBtn').disabled = index === 0;
@@ -67,7 +91,9 @@ function previousSpeech() {
 function slapCharacter() {
     if (!character) return;
     
-    // Play slap sound
+    slapCount++;
+    
+    // Play slap sound with variation
     playSound('slapSound');
     
     // Deal damage
@@ -76,24 +102,60 @@ function slapCharacter() {
     // Update UI
     updateDamageUI();
     
+    // Screen shake effect
+    screenShake();
+    
+    // Update slap count
+    document.getElementById('slapCount').textContent = slapCount;
+    
     // Check if forgive button should be enabled
     if (character.getDamagePercent() >= 50 && !canForgive) {
         canForgive = true;
         document.getElementById('forgiveBtn').disabled = false;
         
-        // Add visual feedback
-        document.getElementById('forgiveBtn').style.animation = 'pulse 0.5s ease';
-        setTimeout(() => {
-            document.getElementById('forgiveBtn').style.animation = '';
-        }, 500);
+        // Unlock animation
+        unlockForgiveButton();
     }
 }
 
 function updateDamageUI() {
     const damagePercent = character.getDamagePercent();
-    document.getElementById('damagePercent').textContent = Math.round(damagePercent);
-    document.getElementById('damageFill').style.width = damagePercent + '%';
+    document.getElementById('damagePercent').textContent = Math.round(damagePercent) + '%';
+    
+    const damageFill = document.getElementById('damageFill');
+    damageFill.style.width = damagePercent + '%';
+    
+    // Add pulsing effect at certain damage levels
+    if (damagePercent >= 75) {
+        damageFill.style.animation = 'damagePulse 0.5s ease';
+    }
 }
+
+// Screen shake effect
+function screenShake() {
+    const container = document.querySelector('.container');
+    container.style.animation = 'none';
+    
+    setTimeout(() => {
+        container.style.animation = 'shake 0.3s ease';
+    }, 10);
+}
+
+// Add shake animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-8px); }
+        75% { transform: translateX(8px); }
+    }
+    
+    @keyframes damagePulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+    }
+`;
+document.head.appendChild(style);
 
 // ==================== FORGIVE FUNCTIONALITY ====================
 function forgiveCharacter() {
@@ -108,11 +170,11 @@ function forgiveCharacter() {
     // Show victory screen
     setTimeout(() => {
         document.getElementById('victoryScreen').classList.add('show');
-    }, 500);
+    }, 300);
 }
 
 function createHeartParticles() {
-    const particleCount = 30;
+    const particleCount = 50;
     for (let i = 0; i < particleCount; i++) {
         setTimeout(() => {
             const heart = document.createElement('div');
@@ -127,8 +189,8 @@ function createHeartParticles() {
             
             document.body.appendChild(heart);
             
-            setTimeout(() => heart.remove(), 2000);
-        }, i * 50);
+            setTimeout(() => heart.remove(), 2500);
+        }, i * 30);
     }
 }
 
@@ -157,7 +219,7 @@ function playSound(elementId) {
         const audio = document.getElementById(elementId);
         if (audio) {
             audio.currentTime = 0;
-            audio.play().catch(err => console.log('Audio play failed:', err));
+            audio.play().catch(err => console.log('Audio play prevented'));
         }
     } catch (err) {
         console.log('Audio error:', err);
@@ -167,18 +229,49 @@ function playSound(elementId) {
 function tryPlayBackgroundMusic() {
     try {
         const bgMusic = document.getElementById('backgroundMusic');
-        if (bgMusic && bgMusic.src) {
+        if (bgMusic) {
             bgMusic.volume = 0.3;
-            bgMusic.play().catch(err => console.log('Background music auto-play prevented'));
+            bgMusic.play().catch(err => console.log('Auto-play prevented'));
         }
     } catch (err) {
         console.log('Background music error:', err);
     }
 }
 
-// ==================== CANVAS CLICK EVENT ====================
+// ==================== UNLOCK FORGIVE BUTTON ANIMATION ====================
+function unlockForgiveButton() {
+    const btn = document.getElementById('forgiveBtn');
+    btn.style.animation = 'none';
+    
+    setTimeout(() => {
+        btn.style.animation = 'unlockPulse 0.6s ease';
+        
+        // Add glow effect
+        const glowStyle = document.createElement('style');
+        glowStyle.textContent = `
+            @keyframes unlockPulse {
+                0% {
+                    transform: scale(1);
+                    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+                }
+                50% {
+                    transform: scale(1.08);
+                    box-shadow: 0 15px 50px rgba(102, 126, 234, 0.8);
+                }
+                100% {
+                    transform: scale(1);
+                    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+                }
+            }
+        `;
+        document.head.appendChild(glowStyle);
+    }, 10);
+}
+
+// ==================== CANVAS INTERACTION ====================
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('characterCanvas');
+    
     canvas.addEventListener('click', () => {
         slapCharacter();
     });
@@ -190,13 +283,54 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// ==================== ADD PULSE ANIMATION ====================
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-        100% { transform: scale(1); }
+// ==================== CREATE VICTORY STARS ====================
+function createVictoryStars() {
+    const starsContainer = document.querySelector('.victory-stars');
+    
+    for (let i = 0; i < 30; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        const duration = 2 + Math.random() * 2;
+        const delay = Math.random() * 2;
+        
+        star.style.left = x + '%';
+        star.style.top = y + '%';
+        star.style.animationDelay = delay + 's';
+        star.style.animationDuration = duration + 's';
+        
+        starsContainer.appendChild(star);
     }
-`;
-document.head.appendChild(style);
+}
+
+// ==================== ADD DRAMATIC MUSIC CUE ====================
+function addDramaticEffect() {
+    // Add screen flash
+    const flash = document.createElement('div');
+    flash.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: white;
+        z-index: 999;
+        animation: dramaticFlash 0.3s ease;
+        pointer-events: none;
+    `;
+    
+    const flashStyle = document.createElement('style');
+    flashStyle.textContent = `
+        @keyframes dramaticFlash {
+            0% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0; }
+        }
+    `;
+    document.head.appendChild(flashStyle);
+    document.body.appendChild(flash);
+    
+    setTimeout(() => flash.remove(), 300);
+}
