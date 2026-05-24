@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💔 I'm Sorry - Apology Website</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background"></div>
+    
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="title">I'm Deeply Sorry</h1>
+            <p class="subtitle">Please listen to what I have to say...</p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Canvas for Character -->
+            <div class="character-container">
+                <canvas id="characterCanvas" width="400" height="500"></canvas>
+            </div>
+
+            <!-- Speech Section -->
+            <div class="speech-section">
+                <div class="speech-header">
+                    <h2 id="speechTitle">Part 1: The Responsibility</h2>
+                </div>
+                
+                <div class="speech-text">
+                    <p id="speechContent">Loading...</p>
+                </div>
+
+                <div class="speech-navigation">
+                    <button class="btn btn-nav" id="prevBtn" onclick="previousSpeech()">← Previous</button>
+                    <span class="speech-counter"><span id="currentPart">1</span> / 3</span>
+                    <button class="btn btn-nav" id="nextBtn" onclick="nextSpeech()">Next →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interaction Section -->
+        <div class="interaction-section">
+            <div class="damage-bar">
+                <div class="damage-fill" id="damageFill"></div>
+            </div>
+            <p class="damage-text">Anger Level: <span id="damagePercent">0</span>%</p>
+
+            <div class="button-group">
+                <button class="btn btn-slap" id="slapBtn" onclick="slapCharacter()">
+                    👋 SLAP HIM
+                </button>
+                <button class="btn btn-forgive" id="forgiveBtn" onclick="forgiveCharacter()" disabled>
+                    💗 FORGIVE ME
+                </button>
+            </div>
+
+            <p class="hint">💡 Slap as much as you want, then click Forgive when ready</p>
+        </div>
+
+        <!-- Victory Screen (Hidden) -->
+        <div class="victory-screen" id="victoryScreen">
+            <div class="victory-content">
+                <h2>💕 YOU FORGAVE ME 💕</h2>
+                <p>Thank you for giving me a chance...</p>
+                <p class="victory-message">I promise to be better for you ❤️</p>
+                <button class="btn btn-restart" onclick="location.reload()">Start Over</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="backgroundMusic" loop>
+        <source src="audio/background-music.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="slapSound">
+        <source src="audio/slap-sound.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="forgiveSound">
+        <source src="audio/forgive-sound.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="character.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
